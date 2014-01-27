@@ -1,7 +1,1 @@
 pod "AUAccount", :path => "../AUAccount.podspec"
-
-target "Demo" do
-end
-
-target "DemoTests" do
-end

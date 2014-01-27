@@ -1,0 +1,17 @@
+PODS:
+  - AUAccount (0.1.0):
+    - SSKeychain
+  - SSKeychain (1.2.1)
+
+DEPENDENCIES:
+  - AUAccount (from `../AUAccount.podspec`)
+
+EXTERNAL SOURCES:
+  AUAccount:
+    :path: ../AUAccount.podspec
+
+SPEC CHECKSUMS:
+  AUAccount: e449b861090c06efa482e9741c421d3b4d8b4e32
+  SSKeychain: d18926838c2e7cd342e2a49e9f869858e49f035a
+
+COCOAPODS: 0.29.0
