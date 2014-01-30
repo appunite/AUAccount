@@ -34,9 +34,8 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSCoding, NSCoding> 
 - (NSString *)authenticationToken:(NSError **)error;
 
 /**
- *  Perform login operation
+ *  Register new user
  *
- *  @param user           Logging user
  *  @param token          Authentication toke
  *  @param expirationDate Expiration date of authentication token
  *  @param accounType     Text account description
@@ -44,11 +43,10 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSCoding, NSCoding> 
  *
  *  @return Error while adding token to keychain
  */
-- (BOOL)loginWithUser:(id<NSCopying, NSCoding>)user
-            authToken:(NSString *)token
-       expirationDate:(NSDate *)expirationDate
-          accountType:(NSString *)accounType
-                error:(NSError **)error;
+- (BOOL)registerAccountWithAuthenticationToken:(NSString *)token
+                                expirationDate:(NSDate *)expirationDate
+                                   accountType:(NSString *)accounType
+                                         error:(NSError **)error;
 
 /**
  *  Assign new user data to account
@@ -88,3 +86,4 @@ extern NSString * const AUAccountDidUpdateUserNotification;
 
 // User Defaults Keys
 extern NSString * const kAUAccountKey;
+

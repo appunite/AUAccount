@@ -90,8 +90,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
                                                         object:user];
 }
 
-- (BOOL)loginWithUser:(id<NSCopying, NSCoding>)user authToken:(NSString *)token expirationDate:(NSDate *)expirationDate accountType:(NSString *)accounType error:(NSError *__autoreleasing *)error {
-    NSParameterAssert(user);
+- (BOOL)registerAccountWithAuthenticationToken:(NSString *)token expirationDate:(NSDate *)expirationDate accountType:(NSString *)accounType error:(NSError *__autoreleasing *)error {
     NSParameterAssert(token);
     NSParameterAssert(accounType);
 
@@ -110,13 +109,14 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
     
     if (!error) {
         // assing new values
-        _user = user;
         _expirationDate = expirationDate;
         _accountType = accounType;
+        _loginDate = [NSDate date];
         
         // prepare dictionary to save
         NSMutableDictionary* dict = [NSMutableDictionary new];
-        dict[kAUAccountLoginDateKey] = [NSDate date];
+        dict[kAUAccountLoginDateKey] = _loginDate;
+        dict[kAUAccountUserKey] = nil;
         
         if ([accounType length] > 0) {
             dict[kAUAccountTypeKey] = accounType;
@@ -124,10 +124,6 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 
         if (expirationDate) {
             dict[kAUAccountExpirationDateKey] = expirationDate;
-        }
-
-        if (user) {
-            dict[kAUAccountUserKey] = [NSKeyedArchiver archivedDataWithRootObject:user];
         }
         
         // save account to NSUserDefaults
@@ -137,7 +133,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
         
         // post notification with new user object
         [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLoginUserWithSuccessNotification
-                                                            object:user];
+                                                            object:nil];
         
         return YES;
     }
@@ -146,7 +142,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 }
 
 - (BOOL)isLoggedIn {
-    return (_user != nil);
+    return (_loginDate != nil);
 }
 
 
