@@ -116,7 +116,6 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
         // prepare dictionary to save
         NSMutableDictionary* dict = [NSMutableDictionary new];
         dict[kAUAccountLoginDateKey] = _loginDate;
-        dict[kAUAccountUserKey] = nil;
         
         if ([accounType length] > 0) {
             dict[kAUAccountTypeKey] = accounType;
