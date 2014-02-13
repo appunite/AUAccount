@@ -36,6 +36,13 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSCoding, NSCoding> 
 /**
  *  Register new user
  *
+ *  @param accounType Text account description
+ */
+- (void)registerAccountWithType:(NSString *)accounType;
+
+/**
+ *  Register new user
+ *
  *  @param token          Authentication toke
  *  @param expirationDate Expiration date of authentication token
  *  @param accounType     Text account description

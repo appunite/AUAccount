@@ -90,8 +90,11 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
                                                         object:user];
 }
 
+- (void)registerAccountWithType:(NSString *)accounType {
+    [self registerAccountWithAuthenticationToken:nil expirationDate:nil accountType:accounType error:NULL];
+}
+
 - (BOOL)registerAccountWithAuthenticationToken:(NSString *)token expirationDate:(NSDate *)expirationDate accountType:(NSString *)accounType error:(NSError *__autoreleasing *)error {
-    NSParameterAssert(token);
     NSParameterAssert(accounType);
 
     error = nil;
@@ -102,10 +105,12 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
     }
 
     // save authentication token in Keychain
-    [SSKeychain setPassword:token
-                 forService:kServiceName
-                    account:kAccountName
-                      error:error];
+    if ([token length] > 0) {
+        [SSKeychain setPassword:token
+                     forService:kServiceName
+                        account:kAccountName
+                          error:error];
+    }
     
     if (!error) {
         // assing new values
