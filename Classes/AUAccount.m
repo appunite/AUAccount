@@ -61,9 +61,6 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 
 - (void)logout {
 
-    // post notification with logout user object
-    [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLogoutUserWithSuccessNotification
-                                                        object:self.user];
     // fire clean up block
     if (self.logoutBlock) {
         self.logoutBlock(self, self.user);
@@ -71,6 +68,10 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
     
     // clean all account user data
     [self _cleanUserData];
+    
+    // post notification with logout user object
+    [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLogoutUserWithSuccessNotification
+                                                        object:self.user];
 }
 
 - (void)updateUser:(id<NSCopying, NSCoding>)user {
