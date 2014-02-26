@@ -15,6 +15,7 @@ NSString * const AUAccountTypeFacebook  = @"AUAccountTypeFacebook";
 
 // Notification
 NSString * const AUAccountDidLoginUserWithSuccessNotification   = @"AUAccountDidLoginUserWithSuccessNotification";
+NSString * const AUAccountWillLogoutUserNotification            = @"AUAccountWillLogoutUserNotification";
 NSString * const AUAccountDidLogoutUserWithSuccessNotification  = @"AUAccountDidLogoutUserWithSuccessNotification";
 NSString * const AUAccountDidUpdateUserNotification             = @"AUAccountDidUpdateUserNotification";
 
@@ -62,8 +63,9 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 - (void)logout {
 
     // post notification with logout user object
-    [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLogoutUserWithSuccessNotification
+    [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountWillLogoutUserNotification
                                                         object:self.user];
+
     // fire clean up block
     if (self.logoutBlock) {
         self.logoutBlock(self, self.user);
@@ -71,6 +73,10 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
     
     // clean all account user data
     [self _cleanUserData];
+
+    // post notification after logout data cleanup
+    [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLogoutUserWithSuccessNotification
+                                                        object:nil];
 }
 
 - (void)updateUser:(id<NSCopying, NSCoding>)user {
