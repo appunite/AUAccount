@@ -13,10 +13,10 @@ NSString * const AUAccountTypeCustom    = @"AUAccountTypeCustom";
 NSString * const AUAccountTypeTwitter   = @"AUAccountTypeTwitter";
 NSString * const AUAccountTypeFacebook  = @"AUAccountTypeFacebook";
 
-// Notification
-NSString * const AUAccountDidLoginUserWithSuccessNotification   = @"AUAccountDidLoginUserWithSuccessNotification";
+// Notifications
+NSString * const AUAccountDidLoginUserNotification              = @"AUAccountDidLoginUserNotification";
 NSString * const AUAccountWillLogoutUserNotification            = @"AUAccountWillLogoutUserNotification";
-NSString * const AUAccountDidLogoutUserWithSuccessNotification  = @"AUAccountDidLogoutUserWithSuccessNotification";
+NSString * const AUAccountDidLogoutUserNotification             = @"AUAccountDidLogoutUserNotification";
 NSString * const AUAccountDidUpdateUserNotification             = @"AUAccountDidUpdateUserNotification";
 
 // Private keys
@@ -75,7 +75,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
     [self _cleanUserData];
 
     // post notification after logout data cleanup
-    [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLogoutUserWithSuccessNotification
+    [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLogoutUserNotification
                                                         object:nil];
 }
 
@@ -142,7 +142,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
         [userDefaults synchronize];
         
         // post notification with new user object
-        [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLoginUserWithSuccessNotification
+        [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLoginUserNotification
                                                             object:nil];
         
         return YES;
