@@ -86,9 +86,10 @@ extern NSString * const AUAccountTypeCustom;
 extern NSString * const AUAccountTypeTwitter;
 extern NSString * const AUAccountTypeFacebook;
 
-// Notification
-extern NSString * const AUAccountDidLoginUserWithSuccessNotification;
-extern NSString * const AUAccountDidLogoutUserWithSuccessNotification;
+// Notifications
+extern NSString * const AUAccountDidLoginUserNotification;
+extern NSString * const AUAccountWillLogoutUserNotification;
+extern NSString * const AUAccountDidLogoutUserNotification;
 extern NSString * const AUAccountDidUpdateUserNotification;
 
 // User Defaults Keys

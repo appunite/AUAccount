@@ -13,10 +13,10 @@ NSString * const AUAccountTypeCustom    = @"AUAccountTypeCustom";
 NSString * const AUAccountTypeTwitter   = @"AUAccountTypeTwitter";
 NSString * const AUAccountTypeFacebook  = @"AUAccountTypeFacebook";
 
-// Notification
-NSString * const AUAccountDidLoginUserWithSuccessNotification   = @"AUAccountDidLoginUserWithSuccessNotification";
+// Notifications
+NSString * const AUAccountDidLoginUserNotification              = @"AUAccountDidLoginUserNotification";
 NSString * const AUAccountWillLogoutUserNotification            = @"AUAccountWillLogoutUserNotification";
-NSString * const AUAccountDidLogoutUserWithSuccessNotification  = @"AUAccountDidLogoutUserWithSuccessNotification";
+NSString * const AUAccountDidLogoutUserNotification             = @"AUAccountDidLogoutUserNotification";
 NSString * const AUAccountDidUpdateUserNotification             = @"AUAccountDidUpdateUserNotification";
 
 // Private keys
