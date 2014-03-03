@@ -87,9 +87,13 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary* dict = [[userDefaults objectForKey:kAUAccountKey] mutableCopy];
 
-    // save new user data
+    // add updated user object
     [dict setObject:[NSKeyedArchiver archivedDataWithRootObject:user]
              forKey:kAUAccountUserKey];
+    
+    // save updated user data
+    [userDefaults setObject:dict forKey:kAUAccountKey];
+    [userDefaults synchronize];
     
     // post notification with new user object
     [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidUpdateUserNotification
