@@ -11,7 +11,7 @@
 #import "SSKeychain.h"
 
 @class AUAccount;
-typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSCoding, NSCoding> user);
+typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSSecureCoding> user);
 
 @interface AUAccount : NSObject
 
@@ -25,7 +25,7 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSCoding, NSCoding> 
 /**
  *  User connected with account
  */
-@property (nonatomic, strong, readonly) id<NSCopying, NSCoding> user;
+@property (nonatomic, strong, readonly) id<NSSecureCoding> user;
 
 @property (nonatomic, strong, readonly) NSString *accountType;
 @property (nonatomic, strong, readonly) NSDate *expirationDate;
@@ -48,7 +48,7 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSCoding, NSCoding> 
  *  @param accounType     Text account description
  *  @param error          Keychain add password error
  *
- *  @return Error while adding token to keychain
+ *  @return YES if the operation was successful, otherwise NO.
  */
 - (BOOL)registerAccountWithAuthenticationToken:(NSString *)token
                                 expirationDate:(NSDate *)expirationDate
@@ -59,8 +59,10 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSCoding, NSCoding> 
  *  Assign new user data to account
  *
  *  @param user New user object
+ *
+ *  @return YES if the operation was successful, otherwise NO.
  */
-- (void)updateUser:(id<NSCopying, NSCoding>)user;
+- (BOOL)updateUser:(id<NSSecureCoding>)user;
 
 /**
  *  Check if account has assiggned to any user

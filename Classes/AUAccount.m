@@ -14,14 +14,13 @@ NSString * const AUAccountTypeTwitter   = @"AUAccountTypeTwitter";
 NSString * const AUAccountTypeFacebook  = @"AUAccountTypeFacebook";
 
 // Notifications
-NSString * const AUAccountDidLoginUserNotification              = @"AUAccountDidLoginUserNotification";
-NSString * const AUAccountWillLogoutUserNotification            = @"AUAccountWillLogoutUserNotification";
-NSString * const AUAccountDidLogoutUserNotification             = @"AUAccountDidLogoutUserNotification";
-NSString * const AUAccountDidUpdateUserNotification             = @"AUAccountDidUpdateUserNotification";
+NSString * const AUAccountDidLoginUserNotification      = @"AUAccountDidLoginUserNotification";
+NSString * const AUAccountWillLogoutUserNotification    = @"AUAccountWillLogoutUserNotification";
+NSString * const AUAccountDidLogoutUserNotification     = @"AUAccountDidLogoutUserNotification";
+NSString * const AUAccountDidUpdateUserNotification     = @"AUAccountDidUpdateUserNotification";
 
 // Private keys
 NSString * const kAUAccountKey = @"kAUAccountKey";
-NSString * const kAUAccountUserKey = @"kAUAccountUserKey";
 NSString * const kAUAccountTypeKey = @"kAUAccountTypeKey";
 NSString * const kAUAccountLoginDateKey = @"kAUAccountLoginDateKey";
 NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
@@ -41,8 +40,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
     return __sharedInstance;
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         // get user dict
@@ -51,10 +49,13 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
         
         // check if any account exist
         if (dict) {
-            _user = [NSKeyedUnarchiver unarchiveObjectWithData:dict[kAUAccountUserKey]];
+            // get account informations
             _expirationDate = dict[kAUAccountExpirationDateKey];
             _loginDate = dict[kAUAccountLoginDateKey];
             _accountType = dict[kAUAccountTypeKey];
+            
+            // load user's data
+            _user = [NSKeyedUnarchiver unarchiveObjectWithFile:[self _userDataStoragePath]];
         }
     }
     return self;
@@ -79,25 +80,21 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
                                                         object:nil];
 }
 
-- (void)updateUser:(id<NSCopying, NSCoding>)user {
-    // update user data
-    _user = user;
-    
-    // get previous saved user data
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSMutableDictionary* dict = [[userDefaults objectForKey:kAUAccountKey] mutableCopy];
-
+- (BOOL)updateUser:(id<NSSecureCoding>)user {
     // add updated user object
-    [dict setObject:[NSKeyedArchiver archivedDataWithRootObject:user]
-             forKey:kAUAccountUserKey];
+    BOOL successed = [NSKeyedArchiver archiveRootObject:user toFile:[self _userDataStoragePath]];
+
+    // if archived user without any problems
+    if (successed) {
+        // update user data
+        _user = user;
+        
+        // post notification with new user object
+        [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidUpdateUserNotification
+                                                            object:user];
+    }
     
-    // save updated user data
-    [userDefaults setObject:dict forKey:kAUAccountKey];
-    [userDefaults synchronize];
-    
-    // post notification with new user object
-    [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidUpdateUserNotification
-                                                        object:user];
+    return successed;
 }
 
 - (void)registerAccountWithType:(NSString *)accounType {
@@ -109,7 +106,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 
     error = nil;
     
-    // remove previou user data
+    // remove previous user data
     if ([self isLoggedIn]) {
         [self _cleanUserData];
     }
@@ -140,16 +137,22 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
             dict[kAUAccountExpirationDateKey] = expirationDate;
         }
         
-        // save account to NSUserDefaults
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        [userDefaults setObject:dict forKey:kAUAccountKey];
-        [userDefaults synchronize];
+        // save user data to file
+        BOOL success = [NSKeyedArchiver archiveRootObject:dict toFile:[self _userDataStoragePath]];
+
+        // if archived user without any problems
+        if (success) {
+            // save account information to NSUserDefaults
+            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+            [userDefaults setObject:dict forKey:kAUAccountKey];
+            [userDefaults synchronize];
+            
+            // post notification with new user object
+            [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLoginUserNotification
+                                                                object:nil];
+        }
         
-        // post notification with new user object
-        [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLoginUserNotification
-                                                            object:nil];
-        
-        return YES;
+        return success;
     }
 
     return NO;
@@ -174,13 +177,26 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 #pragma mark Private
 
 - (void)_cleanUserData {
+    // remove user data from file
+    [[NSFileManager defaultManager] removeItemAtPath:[self _userDataStoragePath] error:nil];
+    
     // remove data form NSUserDefaults
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kAUAccountKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     // clean user data
     _user = nil;
     _expirationDate = nil;
     _loginDate = nil;
+}
+
+- (NSString *)_userDataStoragePath {
+    // get documents directory path
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    // add store file name
+    return [documentsDirectory stringByAppendingPathComponent:@"AUAccount.usr"];
 }
 
 @end
