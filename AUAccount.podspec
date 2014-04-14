@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "AUAccount"
-  s.version      = "0.1.7"
+  s.version      = "0.2.0"
   s.summary      = "AppUnite support for current user logged in account."
   
   s.homepage     = "http://appunite.com"
@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'Classes'
-  # s.frameworks = 'SomeFramework', 'AnotherFramework'
-
+  
   s.dependency 'SSKeychain'
+
 end
