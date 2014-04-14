@@ -1,1 +1,1 @@
-pod "AUAccount", :path => "../AUAccount.podspec"
+pod "AUAccount", :path => '../'
