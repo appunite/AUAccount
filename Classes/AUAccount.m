@@ -113,10 +113,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 
     // save authentication token in Keychain
     if ([token length] > 0) {
-        [SSKeychain setPassword:token
-                     forService:kServiceName
-                        account:kAccountName
-                          error:error];
+        [self setAuthenticationToken:token error:error];
     }
     
     if (!error) {
@@ -164,7 +161,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 
 
 #pragma mark -
-#pragma mark Getters
+#pragma mark Auth token
 
 - (NSString *)authenticationToken:(NSError **)error {
     return [SSKeychain passwordForService:kServiceName
@@ -172,6 +169,12 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
                                     error:error];
 }
 
+- (void)setAuthenticationToken:(NSString *)token error:(NSError **)error {
+    [SSKeychain setPassword:token
+                 forService:kServiceName
+                    account:kAccountName
+                      error:error];
+}
 
 #pragma mark -
 #pragma mark Private

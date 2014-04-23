@@ -31,7 +31,11 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSSecureCoding> user
 @property (nonatomic, strong, readonly) NSDate *expirationDate;
 @property (nonatomic, strong, readonly) NSDate *loginDate;
 
+/**
+ * Account access token
+ */
 - (NSString *)authenticationToken:(NSError **)error;
+- (void)setAuthenticationToken:(NSString *)token error:(NSError **)error;
 
 /**
  *  Register new user

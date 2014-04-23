@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "AUAccount"
-  s.version      = "0.2.0"
+  s.version      = "0.2.1"
   s.summary      = "AppUnite support for current user logged in account."
   
   s.homepage     = "http://appunite.com"
