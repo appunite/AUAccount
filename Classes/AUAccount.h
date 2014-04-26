@@ -29,7 +29,7 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSSecureCoding> user
 
 @property (nonatomic, strong, readonly) NSString *accountType;
 @property (nonatomic, strong, readonly) NSDate *expirationDate;
-@property (nonatomic, strong, readonly) NSDate *loginDate;
+@property (nonatomic, strong, readonly) NSDate *createdAt;
 
 /**
  * Account access token
@@ -79,6 +79,11 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSSecureCoding> user
  *  Perform logout action
  */
 - (void)logout;
+
+/**
+ *  Method call just before posting notification AUAccountDidLoginUserNotification.
+ */
+- (void)didRegisterNewAccount;
 
 /**
  *  Block invoked in logout methos. Use it to clean update data after logout.

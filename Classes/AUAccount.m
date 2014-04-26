@@ -22,7 +22,7 @@ NSString * const AUAccountDidUpdateUserNotification     = @"AUAccountDidUpdateUs
 // Private keys
 NSString * const kAUAccountKey = @"kAUAccountKey";
 NSString * const kAUAccountTypeKey = @"kAUAccountTypeKey";
-NSString * const kAUAccountLoginDateKey = @"kAUAccountLoginDateKey";
+NSString * const kAUAccountCreatedAtKey = @"kAUAccountLoginDateKey";
 NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 
 #define kAccountName [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"]
@@ -34,7 +34,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
     static AUAccount* __sharedInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        __sharedInstance = [[self alloc] init];
+        __sharedInstance = [[[self class] alloc] init];
     });
     
     return __sharedInstance;
@@ -51,7 +51,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
         if (dict) {
             // get account informations
             _expirationDate = dict[kAUAccountExpirationDateKey];
-            _loginDate = dict[kAUAccountLoginDateKey];
+            _createdAt = dict[kAUAccountCreatedAtKey];
             _accountType = dict[kAUAccountTypeKey];
             
             // load user's data
@@ -120,11 +120,11 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
         // assing new values
         _expirationDate = expirationDate;
         _accountType = accounType;
-        _loginDate = [NSDate date];
+        _createdAt = [NSDate date];
         
         // prepare dictionary to save
         NSMutableDictionary* dict = [NSMutableDictionary new];
-        dict[kAUAccountLoginDateKey] = _loginDate;
+        dict[kAUAccountCreatedAtKey] = _createdAt;
         
         if ([accounType length] > 0) {
             dict[kAUAccountTypeKey] = accounType;
@@ -144,6 +144,9 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
             [userDefaults setObject:dict forKey:kAUAccountKey];
             [userDefaults synchronize];
             
+            //
+            [self didRegisterNewAccount];
+            
             // post notification with new user object
             [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLoginUserNotification
                                                                 object:nil];
@@ -156,9 +159,12 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 }
 
 - (BOOL)isLoggedIn {
-    return (_loginDate != nil);
+    return (_createdAt != nil);
 }
 
+- (void)didRegisterNewAccount {
+    
+}
 
 #pragma mark -
 #pragma mark Auth token
@@ -190,7 +196,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
     // clean user data
     _user = nil;
     _expirationDate = nil;
-    _loginDate = nil;
+    _createdAt = nil;
 }
 
 - (NSString *)_userDataStoragePath {
