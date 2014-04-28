@@ -111,12 +111,13 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
         [self _cleanUserData];
     }
 
-    // save authentication token in Keychain
-    if ([token length] > 0) {
-        [self setAuthenticationToken:token error:error];
+    // check if token is not null
+    if (![token length] > 0) {
+        return NO;
     }
-    
-    if (!error) {
+
+    // save authentication token in Keychain
+    if ([self setAuthenticationToken:token error:error]) {
         // assing new values
         _expirationDate = expirationDate;
         _accountType = accounType;
@@ -134,25 +135,19 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
             dict[kAUAccountExpirationDateKey] = expirationDate;
         }
         
-        // save user data to file
-        BOOL success = [NSKeyedArchiver archiveRootObject:dict toFile:[self _userDataStoragePath]];
-
-        // if archived user without any problems
-        if (success) {
-            // save account information to NSUserDefaults
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            [userDefaults setObject:dict forKey:kAUAccountKey];
-            [userDefaults synchronize];
-            
-            //
-            [self didRegisterNewAccount];
-            
-            // post notification with new user object
-            [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLoginUserNotification
-                                                                object:nil];
-        }
+        // save account information to NSUserDefaults
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        [userDefaults setObject:dict forKey:kAUAccountKey];
+        [userDefaults synchronize];
         
-        return success;
+        //
+        [self didRegisterNewAccount];
+        
+        // post notification with new user object
+        [[NSNotificationCenter defaultCenter] postNotificationName:AUAccountDidLoginUserNotification
+                                                            object:nil];
+        
+        return YES;
     }
 
     return NO;
@@ -175,11 +170,11 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
                                     error:error];
 }
 
-- (void)setAuthenticationToken:(NSString *)token error:(NSError **)error {
-    [SSKeychain setPassword:token
-                 forService:kServiceName
-                    account:kAccountName
-                      error:error];
+- (BOOL)setAuthenticationToken:(NSString *)token error:(NSError **)error {
+    return [SSKeychain setPassword:token
+                        forService:kServiceName
+                           account:kAccountName
+                             error:error];
 }
 
 #pragma mark -

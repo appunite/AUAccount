@@ -35,7 +35,7 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSSecureCoding> user
  * Account access token
  */
 - (NSString *)authenticationToken:(NSError **)error;
-- (void)setAuthenticationToken:(NSString *)token error:(NSError **)error;
+- (BOOL)setAuthenticationToken:(NSString *)token error:(NSError **)error;
 
 /**
  *  Register new user

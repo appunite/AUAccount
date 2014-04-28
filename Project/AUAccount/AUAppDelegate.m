@@ -70,7 +70,7 @@
 
 - (void)_accountNotificationSelector:(NSNotification *)note {
     AUAccount *account = [AUAccount account];
-    NSLog(@"Notification: %@, account: %@, createdAt:%@, user:\n%@", note.name, account.accountType, account.loginDate, account.user);
+    NSLog(@"Notification: %@, account: %@, createdAt:%@, user:\n%@", note.name, account.accountType, account.createdAt, account.user);
 }
 
 @end
