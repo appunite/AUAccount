@@ -165,16 +165,28 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 #pragma mark Auth token
 
 - (NSString *)authenticationToken:(NSError **)error {
+#if TARGET_IPHONE_SIMULATOR
+    
+    return [[NSUserDefaults standardUserDefaults] objectForKey:kAccountName];
+#else
+    
     return [SSKeychain passwordForService:kServiceName
                                   account:kAccountName
                                     error:error];
+#endif
 }
 
 - (BOOL)setAuthenticationToken:(NSString *)token error:(NSError **)error {
+#if TARGET_IPHONE_SIMULATOR
+    [[NSUserDefaults standardUserDefaults] setObject:token forKey:kAccountName];
+    
+    return YES;
+#else
     return [SSKeychain setPassword:token
                         forService:kServiceName
                            account:kAccountName
                              error:error];
+#endif
 }
 
 #pragma mark -
