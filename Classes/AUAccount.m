@@ -25,7 +25,7 @@ NSString * const kAUAccountTypeKey = @"kAUAccountTypeKey";
 NSString * const kAUAccountCreatedAtKey = @"kAUAccountLoginDateKey";
 NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 
-#define kAccountName [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"]
+#define kAccountName [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]
 #define kServiceName [[NSBundle mainBundle] bundleIdentifier]
 
 @implementation AUAccount
