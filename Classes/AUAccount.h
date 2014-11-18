@@ -11,7 +11,7 @@
 #import "SSKeychain.h"
 
 @class AUAccount;
-typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSSecureCoding> user);
+typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSCoding> user);
 
 @interface AUAccount : NSObject
 
@@ -25,7 +25,7 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSSecureCoding> user
 /**
  *  User connected with account
  */
-@property (nonatomic, strong, readonly) id<NSSecureCoding> user;
+@property (nonatomic, strong, readonly) id<NSCoding> user;
 
 @property (nonatomic, strong, readonly) NSString *accountType;
 @property (nonatomic, strong, readonly) NSDate *expirationDate;
@@ -66,7 +66,7 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSSecureCoding> user
  *
  *  @return YES if the operation was successful, otherwise NO.
  */
-- (BOOL)updateUser:(id<NSSecureCoding>)user;
+- (BOOL)updateUser:(id<NSCoding>)user;
 
 /**
  *  Check if account has assiggned to any user

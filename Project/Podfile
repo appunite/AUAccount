@@ -1,1 +1,4 @@
+source 'git@github.com:appunite/cocoapods-private.git'
+source 'https://github.com/CocoaPods/Specs.git'
+
 pod "AUAccount", :path => '../'

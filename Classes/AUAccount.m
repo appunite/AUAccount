@@ -80,7 +80,7 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
                                                         object:nil];
 }
 
-- (BOOL)updateUser:(id<NSSecureCoding>)user {
+- (BOOL)updateUser:(id<NSCoding>)user {
     // add updated user object
     BOOL successed = [NSKeyedArchiver archiveRootObject:user toFile:[self _userDataStoragePath]];
 
