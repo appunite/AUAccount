@@ -1,17 +1,17 @@
 PODS:
-  - AUAccount (0.2.5):
+  - AUAccount (0.2.6):
     - SSKeychain
-  - SSKeychain (1.2.2)
+  - SSKeychain (1.2.3)
 
 DEPENDENCIES:
   - AUAccount (from `../`)
 
 EXTERNAL SOURCES:
   AUAccount:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
-  AUAccount: 3ef518e69b989d13ac6dcb247ab5f24bdb6af3ee
-  SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
+  AUAccount: dc3d35e26d357b0c65445419b1ed605c7e5e6744
+  SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.38.2

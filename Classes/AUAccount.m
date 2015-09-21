@@ -25,9 +25,6 @@ NSString * const kAUAccountTypeKey = @"kAUAccountTypeKey";
 NSString * const kAUAccountCreatedAtKey = @"kAUAccountLoginDateKey";
 NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 
-#define kAccountName [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]
-#define kServiceName [[NSBundle mainBundle] bundleIdentifier]
-
 @implementation AUAccount
 
 + (instancetype)account {
@@ -162,29 +159,45 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 }
 
 #pragma mark -
+#pragma mark Defaults
+
+- (NSString *)accountName {
+    return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+}
+
+- (NSString *)serviceName {
+    return [[NSBundle mainBundle] bundleIdentifier];
+}
+
+#pragma mark -
 #pragma mark Auth token
 
 - (NSString *)authenticationToken:(NSError **)error {
+    NSString *accountName = [self accountName];
+    
 #if TARGET_IPHONE_SIMULATOR
     
-    return [[NSUserDefaults standardUserDefaults] objectForKey:kAccountName];
+    return [[NSUserDefaults standardUserDefaults] objectForKey:accountName];
 #else
     
-    return [SSKeychain passwordForService:kServiceName
-                                  account:kAccountName
+    NSString *serviceName = [self serviceName];
+    return [SSKeychain passwordForService:serviceName
+                                  account:accountName
                                     error:error];
 #endif
 }
 
 - (BOOL)setAuthenticationToken:(NSString *)token error:(NSError **)error {
+    NSString *accountName = [self accountName];
 #if TARGET_IPHONE_SIMULATOR
-    [[NSUserDefaults standardUserDefaults] setObject:token forKey:kAccountName];
+    [[NSUserDefaults standardUserDefaults] setObject:token forKey:accountName];
     
     return YES;
 #else
+    NSString *serviceName = [self serviceName];
     return [SSKeychain setPassword:token
-                        forService:kServiceName
-                           account:kAccountName
+                        forService:serviceName
+                           account:accountName
                              error:error];
 #endif
 }
