@@ -32,16 +32,16 @@ typedef void (^AUAccountLogoutBlock)(AUAccount* account, id<NSCoding> user);
 @property (nonatomic, strong, readonly) NSDate *createdAt;
 
 /**
+ * Keychain keys
+ */
+@property (nonatomic, strong, readwrite) NSString *accountName;
+@property (nonatomic, strong, readwrite) NSString *serviceName;
+
+/**
  * Account access token
  */
 - (NSString *)authenticationToken:(NSError **)error;
 - (BOOL)setAuthenticationToken:(NSString *)token error:(NSError **)error;
-
-/**
- * Keychain keys
- */
-- (NSString *)accountName;
-- (NSString *)serviceName;
 
 /**
  *  Register new user

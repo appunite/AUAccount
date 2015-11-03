@@ -53,6 +53,9 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
             
             // load user's data
             _user = [NSKeyedUnarchiver unarchiveObjectWithFile:[self _userDataStoragePath]];
+            
+            _accountName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+            _serviceName = [[NSBundle mainBundle] bundleIdentifier];
         }
     }
     return self;
@@ -159,28 +162,17 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 }
 
 #pragma mark -
-#pragma mark Defaults
-
-- (NSString *)accountName {
-    return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-}
-
-- (NSString *)serviceName {
-    return [[NSBundle mainBundle] bundleIdentifier];
-}
-
-#pragma mark -
 #pragma mark Auth token
 
 - (NSString *)authenticationToken:(NSError **)error {
-    NSString *accountName = [self accountName];
+    NSString *accountName = self.accountName;
     
 #if TARGET_IPHONE_SIMULATOR
     
     return [[NSUserDefaults standardUserDefaults] objectForKey:accountName];
 #else
     
-    NSString *serviceName = [self serviceName];
+    NSString *serviceName = self.serviceName;
     return [SSKeychain passwordForService:serviceName
                                   account:accountName
                                     error:error];
@@ -188,13 +180,13 @@ NSString * const kAUAccountExpirationDateKey = @"kAUAccountExpirationDateKey";
 }
 
 - (BOOL)setAuthenticationToken:(NSString *)token error:(NSError **)error {
-    NSString *accountName = [self accountName];
+    NSString *accountName = self.accountName;
 #if TARGET_IPHONE_SIMULATOR
     [[NSUserDefaults standardUserDefaults] setObject:token forKey:accountName];
     
     return YES;
 #else
-    NSString *serviceName = [self serviceName];
+    NSString *serviceName = self.serviceName;
     return [SSKeychain setPassword:token
                         forService:serviceName
                            account:accountName
